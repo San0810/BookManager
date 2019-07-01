@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为IUserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.course.dao.AdminDao">
+        <resultMap id="adminMap" type="com.example.course.entity.Admin">
+            <id property="id" column="id"/>
+            <result property="workNum" column="work_num"/>
+            <result property="name" column="name"/>
+            <result property="password" column="password"/>
+        </resultMap>
+
+        <select id="verify" resultMap="adminMap">
+            select * from admin where work_num=#{arg0} and password=#{arg1}
+        </select>
+
+        <update id="updateInfo" >
+            update admin set name=#{arg1},password=#{arg2} where work_num=#{arg0}
+        </update>
+
+        <select id="findAdminByWorkNum" parameterType="string" resultMap="adminMap">
+            select * from admin where work_num = #{workNum}
+        </select>
+
+        <update id="updateCourse" >
+            update course set course_name=#{arg1},teacher=#{arg2},sum=#{arg3},res=#{arg4},limit_grade=#{arg5},time=#{arg6}
+            where course_num=#{arg0}
+        </update>
+
+        <delete id="deleteCollege" parameterType="int">
+            delete  from colleged where course_id=#{id}
+        </delete>
+
+        <select id="findIdByCollegeName" parameterType="string" resultType="int">
+            select id from college where college_name=#{collegeName}
+        </select>
+
+        <insert id="insertCollege" keyProperty="id" useGeneratedKeys="true">
+            insert into colleged(college_id,college_name,course_id) values (#{arg0},#{arg1},#{arg2})
+        </insert>
+
+        <delete id="deleteCoursed" parameterType="string">
+            delete from coursed where course_num=#{courseNum}
+        </delete>
+
+        <delete id="deleteCourse" parameterType="string">
+            delete from course where course_num=#{courseNum}
+        </delete>
+
+        <insert id="insertCourse" keyProperty="id" useGeneratedKeys="true" parameterType="com.example.course.entity.Course" >
+            insert into course(course_num,course_name,teacher,sum,res,limit_grade,time)
+            values (#{courseNum},#{courseName},#{teacher},#{sum},#{res},#{limitGrade},#{time})
+        </insert>
+
+        <select id="findIdByCourseNum" parameterType="string" resultType="int">
+            select id from course where course_num=#{courseNum}
+        </select>
+
+
+</mapper>

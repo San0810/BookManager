@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为IUserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.course.dao.CourseDao">
+    <resultMap id="courseMap" type="com.example.course.entity.Course">
+        <id property="id" column="id"/>
+        <result property="courseNum" column="course_num"/>
+        <result property="courseName" column="course_name"/>
+        <result property="teacher" column="teacher"/>
+        <result property="sum" column="sum"/>
+        <result property="res" column="res"/>
+        <result property="limitGrade" column="limit_grade"/>
+        <result property="time" column="time"/>
+        <collection property="list" ofType="com.example.course.entity.College">
+            <id property="id" column="college_id"/>
+            <result property="collegeName" column="college_name"/>
+        </collection>
+    </resultMap>
+    <resultMap id="coursedMap" type="com.example.course.bean.Coursed">
+        <id property="id" column="id"/>
+        <result property="studentNum" column="student_num"/>
+        <result property="studentName" column="student_name"/>
+        <result property="courseNum" column="course_num"/>
+        <result property="courseName" column="course_name"/>
+        <result property="teacher" column="teacher"/>
+    </resultMap>
+    <select id="getAll" resultType="int">
+        select count(*) from course
+    </select>
+    <select id="listByPage" parameterType="map" resultMap="courseMap">
+        select c.*,cd.college_id,cd.college_name from course c left join colleged cd on c.id=cd.course_id
+        <where>
+            <if test="teacher!=null and teacher!=''">
+                and teacher=#{teacher}
+            </if>
+            <if test="college!=null and college!=''">
+                and cd.college_name=#{college}
+            </if>
+            <if test="courseNum!=null and courseNum!=''">
+                and course_num=#{courseNum}
+            </if>
+        </where>
+    </select>
+    <select id="findByCourseNum" parameterType="string" resultMap="courseMap">
+        select c.*,cd.college_id,cd.college_name from course c left join colleged cd on c.id=cd.course_id where course_num=#{courseNum}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.course.bean.Coursed" >
+        insert into coursed(student_num,student_name,course_num,course_name,teacher)
+        values (#{studentNum},#{studentName},#{courseNum},#{courseName},#{teacher})
+    </insert>
+
+    <update id="update" parameterType="string"  >
+        update course set res=res-1 where course_num=#{courseNum}
+    </update>
+    <select id="findByCourseNum1"  resultMap="coursedMap">
+        select * from coursed where course_num=#{arg0} and student_num=#{arg1}
+    </select>
+
+    <select id="listByStudentNum" parameterType="string" resultMap="courseMap">
+        select * from coursed cd ,course c where cd.student_num=#{studentNum} and cd.course_num=c.course_num
+    </select>
+    <delete id="remove" >
+        delete  from coursed where student_num=#{arg0} and course_num=#{arg1}
+    </delete>
+
+    <select id="findResByCourseNum" parameterType="string" resultType="int">
+        select res from course where course_num=#{courseNum}
+    </select>
+
+    <update id="updateCut" parameterType="string">
+        update course set res=res+1 where course_num=#{courseNum}
+    </update>
+</mapper>

@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_course?useUnicode=true&characterEncoding=utf-8&serverTimezone=CTT&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: root
+    password: 123456
+  freemarker:
+    charset: UTF-8
+    content-type: text/html
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
+    settings:
+      template_update_delay: 0
+      default_encoding: UTF-8
+      classic_compatible: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mmm:ss
+    time-zone: GMT+8
+
+
+mybatis:
+  mapper-locations: classpath:mappers/*Mapper.xml
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: com.example.course.entity
